@@ -1,1 +1,1 @@
-// export * from "./click-counter-runtime";
+export * from "./click-counter-runtime";

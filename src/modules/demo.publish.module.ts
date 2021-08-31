@@ -20,6 +20,7 @@ import { SearchPublishModule } from "@paperbits/core/search/search.publish.modul
 import { ClickCounterEditorModule } from "../components/click-counter/ko";
 import { FileSystemDataProvider } from "../persistence/fileSystemDataProvider";
 import { ReactModule } from "@paperbits/react/react.module";
+import { VueModule } from "@paperbits/vue/vue.module";
 
 
 export class DemoPublishModule implements IInjectorModule {
@@ -42,5 +43,6 @@ export class DemoPublishModule implements IInjectorModule {
         injector.bindModule(new SearchPublishModule());
         injector.bindModule(new ClickCounterEditorModule());
         injector.bindModule(new ReactModule());
+        injector.bindModule(new VueModule());
     }
 }
