@@ -1,36 +1,51 @@
+/**
+ * @license
+ * Copyright Paperbits. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file and at https://paperbits.io/license/mit.
+ */
+
 import { Bag } from "@paperbits/common";
-import { ComponentFlow, IWidgetBinding } from "@paperbits/common/editing";
-import { EventManager, Events } from "@paperbits/common/events";
+import { ComponentFlow, WidgetBinding } from "@paperbits/common/editing";
+import { EventManager } from "@paperbits/common/events";
 import { ViewModelBinder } from "@paperbits/common/widgets";
 import { ClickCounterModel } from "./clickCounterModel";
 import { ClickCounter } from "./clickCounter";
 
+
 export class ClickCounterViewModelBinder implements ViewModelBinder<ClickCounterModel, ClickCounter>  {
     constructor(private readonly eventManager: EventManager) { }
 
-    public async modelToViewModel(model: ClickCounterModel, viewModel?: ClickCounter, bindingContext?: Bag<any>): Promise<ClickCounter> {
-        if (!viewModel) {
-            viewModel = new ClickCounter();
-        }
-
-        viewModel.runtimeConfig(JSON.stringify({ initialCount: model.initialCount }));
-
-        const binding: IWidgetBinding<ClickCounterModel, ClickCounter> = {
-            name: "click-counter",
-            displayName: "Click counter",
-            readonly: bindingContext ? bindingContext.readonly : false,
-            model: model,
-            flow: ComponentFlow.Block,
-            draggable: true,
-            editor: "click-counter-editor",
-            applyChanges: async () => {
-                await this.modelToViewModel(model, viewModel, bindingContext);
-                this.eventManager.dispatchEvent(Events.ContentUpdate);
+    public async createWidgetBinding(model: ClickCounterModel, bindingContext: Bag<any>): Promise<WidgetBinding<ClickCounterModel, ClickCounter>> {
+        const binding = new WidgetBinding<ClickCounterModel, ClickCounter>();
+        binding.framework = "vue";
+        binding.model = model;
+        binding.name = "click-counter";
+        binding.displayName = "Click counter";
+        binding.editor = "click-counter-editor";
+        binding.readonly = false;
+        binding.flow = ComponentFlow.Block;
+        binding.draggable = true;
+        binding.viewModelClass = ClickCounter;
+        binding.applyChanges = async () => {
+            await this.modelToViewModel(model, binding.viewModel, bindingContext);
+            this.eventManager.dispatchEvent("onContentUpdate");
+        };
+        binding.onCreate = async () => {
+            await this.modelToViewModel(model, binding.viewModel, bindingContext);
+        };
+        binding.onDispose = async () => {
+            if (model.styles?.instance) {
+                bindingContext.styleManager.removeStyleSheet(model.styles.instance.key);
             }
         };
 
-        viewModel["widgetBinding"] = binding;
+        return binding;
+    }
 
+    public async modelToViewModel(model: ClickCounterModel, viewModel: ClickCounter, bindingContext?: Bag<any>): Promise<ClickCounter> {
+        viewModel.initialCount = model.initialCount;
         return viewModel;
     }
 

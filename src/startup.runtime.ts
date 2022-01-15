@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const injector = new InversifyInjector();
     injector.bindModule(new CoreRuntimeModule());
     injector.bindModule(new StyleRuntimeModule());
+    // injector.bindModule(new VueModule());
     injector.bindModule(new DemoRuntimeModule());
+    
     injector.resolve("autostart");
 });

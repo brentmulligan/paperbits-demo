@@ -7,6 +7,7 @@
  */
 
 import "./polyfills";
+import Vue from "vue";
 import * as ko from "knockout";
 import { InversifyInjector } from "@paperbits/common/injection";
 import { CoreDesignModule } from "@paperbits/core/core.design.module";
@@ -16,6 +17,7 @@ import { StylesDesignModule } from "@paperbits/styles/styles.design.module";
 import { ProseMirrorModule } from "@paperbits/prosemirror/prosemirror.module";
 import { OfflineModule } from "@paperbits/common/persistence/offline.module";
 import { DemoDesignModule } from "./modules/demo.design.module";
+import { VueModule } from "@paperbits/vue/vue.module";
 
 /* Uncomment to enable Firebase module */
 // import { FirebaseModule } from "@paperbits/firebase/firebase.module";
@@ -28,6 +30,7 @@ injector.bindModule(new EmailsDesignModule());
 injector.bindModule(new StylesDesignModule());
 injector.bindModule(new ProseMirrorModule());
 injector.bindModule(new DemoDesignModule());
+injector.bindModule(new VueModule());
 
 /* Uncomment to enable Firebase module */
 // injector.bindModule(new FirebaseModule());
@@ -36,5 +39,12 @@ injector.bindModule(new OfflineModule({ autosave: false }));
 injector.resolve("autostart");
 
 document.addEventListener("DOMContentLoaded", () => {
-    setImmediate(() => ko.applyBindings(undefined, document.body));
+    //     setImmediate(() => ko.applyBindings(undefined, document.body));
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
 });

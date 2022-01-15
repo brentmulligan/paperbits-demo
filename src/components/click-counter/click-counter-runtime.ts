@@ -1,6 +1,13 @@
-import * as ko from "knockout";
+/**
+ * @license
+ * Copyright Paperbits. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file and at https://paperbits.io/license/mit.
+ */
+
 import template from "./click-counter-runtime.html";
-import { Component, RuntimeComponent, Param, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
+import { Component, RuntimeComponent, Prop, OnMounted, OnDestroyed, Watch } from "@paperbits/vue/decorators";
 
 
 @RuntimeComponent({
@@ -11,20 +18,25 @@ import { Component, RuntimeComponent, Param, OnMounted, OnDestroyed } from "@pap
     template: template
 })
 export class ClickCounterRuntime {
-    public readonly clickCount: ko.Observable<number>;
+    public clickCount: number;
 
     constructor() {
-        this.clickCount = ko.observable(0);
-        this.initialCount = ko.observable(0);
+        this.clickCount = 0;
     }
 
-    @Param()
-    public readonly initialCount: ko.Observable<number>;
+    @Prop()
+    public readonly initialCount: string;
 
     @OnMounted()
-    public async initialize(): Promise<void> {
+    public initialize(): void {
         // Your initialization logic
-        this.clickCount(this.initialCount());
+        this.clickCount = parseInt(this.initialCount);
+    }
+
+    @Watch("initialCount")
+    public onInitialCountChange(): void {
+        // Watching for property changes
+        this.clickCount = parseInt(this.initialCount);
     }
 
     @OnDestroyed()
@@ -33,6 +45,6 @@ export class ClickCounterRuntime {
     }
 
     public increaseCount(): void {
-        this.clickCount(this.clickCount() + 1);
+        this.clickCount = this.clickCount + 1;
     }
 }
