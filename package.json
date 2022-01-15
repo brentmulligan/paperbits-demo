@@ -22,6 +22,7 @@
         "@types/knockout.mapping": "^2.0.36",
         "@types/knockout.validation": "0.0.38",
         "@types/mime": "^2.0.3",
+        "@types/react": "^17.0.38",
         "autoprefixer": "10.4.0",
         "copy-webpack-plugin": "^10.0.0",
         "css-loader": "6.5.1",
@@ -54,11 +55,14 @@
         "@paperbits/gtm": "0.1.470",
         "@paperbits/intercom": "0.1.470",
         "@paperbits/prosemirror": "0.1.470",
+        "@paperbits/react": "^1.0.1",
         "@paperbits/styles": "0.1.470",
         "@webcomponents/custom-elements": "^1.5.0",
         "core-js": "^3.19.3",
         "knockout": "^3.5.1",
         "knockout-mapping": "^2.6.0",
-        "knockout.validation": "^2.0.4"
+        "knockout.validation": "^2.0.4",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2"
     }
 }
