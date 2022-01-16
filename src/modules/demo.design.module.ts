@@ -8,21 +8,35 @@
 
 
 import { IInjector, IInjectorModule } from "@paperbits/common/injection";
-import { App } from "../components/app/app";
 import { ConsoleLogger } from "@paperbits/common/logging";
-import { SearchDesignModule } from "@paperbits/core/search/search.design.module";
-import { MemoryObjectStorage } from "../persistence/memoryObjectStorage";
-import { MemoryBlobStorage } from "../persistence/memoryBlobStorage";
-import { StaticRoleService } from "../user/staticRoleService";
-import { ClickCounterDesignModule } from "../components/click-counter/clickCounter.design.module";
-import { HistoryRouteHandler, AnchorRouteHandler } from "@paperbits/common/routing";
-import { HttpDataProvider } from "../persistence/httpDataProvider";
+import { OfflineModule } from "@paperbits/common/persistence/offline.module";
+import { AnchorRouteHandler, HistoryRouteHandler } from "@paperbits/common/routing";
+import { CoreDesignModule } from "@paperbits/core/core.design.module";
 import { PopupDesignModule } from "@paperbits/core/popup";
+import { SearchDesignModule } from "@paperbits/core/search/search.design.module";
+import { EmailsDesignModule } from "@paperbits/emails/emails.design.module";
+import { FormsDesignModule } from "@paperbits/forms/forms.design.module";
+import { ProseMirrorModule } from "@paperbits/prosemirror/prosemirror.module";
+import { ReactModule } from "@paperbits/react/react.module";
+import { StylesDesignModule } from "@paperbits/styles/styles.design.module";
+import { ClickCounterDesignModule } from "../components/click-counter/clickCounter.design.module";
+import { HttpDataProvider } from "../persistence/httpDataProvider";
+import { MemoryBlobStorage } from "../persistence/memoryBlobStorage";
+import { MemoryObjectStorage } from "../persistence/memoryObjectStorage";
+import { StaticRoleService } from "../user/staticRoleService";
 
 
 export class DemoDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
-        injector.bindSingleton("app", App);
+        injector.bindModule(new CoreDesignModule());
+        injector.bindModule(new FormsDesignModule());
+        injector.bindModule(new EmailsDesignModule());
+        injector.bindModule(new StylesDesignModule());
+        injector.bindModule(new ProseMirrorModule());
+        injector.bindModule(new ReactModule());
+        injector.bindModule(new SearchDesignModule());
+        injector.bindModule(new ClickCounterDesignModule());
+        injector.bindModule(new PopupDesignModule());
         injector.bindSingleton("dataProvider", HttpDataProvider);
         injector.bindSingleton("blobStorage", MemoryBlobStorage);
         injector.bindSingleton("objectStorage", MemoryObjectStorage);
@@ -30,8 +44,13 @@ export class DemoDesignModule implements IInjectorModule {
         injector.bindToCollection("autostart", HistoryRouteHandler);
         injector.bindToCollection("autostart", AnchorRouteHandler);
         injector.bindSingleton("logger", ConsoleLogger);
-        injector.bindModule(new SearchDesignModule());
-        injector.bindModule(new ClickCounterDesignModule());
-        injector.bindModule(new PopupDesignModule());
+
+        /* Uncomment to enable Firebase module */
+        // import { FirebaseModule } from "@paperbits/firebase/firebase.module";
+
+        /* Uncomment to enable Firebase module */
+        // injector.bindModule(new FirebaseModule());
+
+        injector.bindModule(new OfflineModule({ autosave: false }));
     }
 }
